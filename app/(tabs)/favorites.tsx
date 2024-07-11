@@ -1,17 +1,15 @@
 import { useFavoriteBooks } from "@/components/context/favorite.context";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { useState } from "react";
+import { useNavigation } from "expo-router";
 import {
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { IBook } from ".";
-import BookDetails from "@/components/BookDetails";
 
 export default function TabTwoScreen() {
   const {
@@ -21,10 +19,9 @@ export default function TabTwoScreen() {
     isBookInFavorites,
   } = useFavoriteBooks();
 
-  const [currentBook, setCurrentBook] = useState<IBook>();
-  return currentBook ? (
-    <BookDetails currentBook={currentBook} setCurrentBook={setCurrentBook} />
-  ) : (
+  const navigation = useNavigation();
+
+  return (
     <SafeAreaView>
       <FlatList
         data={favoriteBooks}
@@ -42,7 +39,13 @@ export default function TabTwoScreen() {
             />
             <View style={styles.cardContent}>
               <View>
-                <TouchableOpacity onPress={() => setCurrentBook(item)}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation
+                      .getParent()
+                      ?.navigate("book-details", { book: item });
+                  }}
+                >
                   <Text style={styles.bookTitle}>{item.title}</Text>
                 </TouchableOpacity>
                 <Text style={styles.bookAuthor}>

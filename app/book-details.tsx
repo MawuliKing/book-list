@@ -1,23 +1,17 @@
 import { IBook } from "@/app/(tabs)";
+import { Collapsible } from "@/components/Collapsible";
+import { useFavoriteBooks } from "@/components/context/favorite.context";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Collapsible } from "./Collapsible";
-import ParallaxScrollView from "./ParallaxScrollView";
-import { ThemedText } from "./ThemedText";
-import { useFavoriteBooks } from "./context/favorite.context";
-import { TabBarIcon } from "./navigation/TabBarIcon";
 
-const BookDetails: React.FC<{
-  currentBook: IBook;
-  setCurrentBook: React.Dispatch<React.SetStateAction<IBook | undefined>>;
-}> = ({
-  currentBook,
-  setCurrentBook,
-}: {
-  currentBook: IBook;
-  setCurrentBook: React.Dispatch<React.SetStateAction<IBook | undefined>>;
-}) => {
+const BookDetails: React.FC = () => {
+  const route: any = useRoute();
+  const currentBook: IBook = route.params?.book;
   const { addBookToFavorites, removeBookFromFavorites, isBookInFavorites } =
     useFavoriteBooks();
 
@@ -36,19 +30,7 @@ const BookDetails: React.FC<{
       }
     >
       <View style={styles.titleContainer}>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <ThemedText type="title">{currentBook.title}</ThemedText>
-          <TouchableOpacity onPress={() => setCurrentBook(undefined)}>
-            <Ionicons name="close" size={20} />
-          </TouchableOpacity>
-        </View>
+        <ThemedText type="title">{currentBook.title}</ThemedText>
       </View>
       <View
         style={{

@@ -1,11 +1,7 @@
-import BookDetails from "@/components/BookDetails";
-import { Collapsible } from "@/components/Collapsible";
 import { useFavoriteBooks } from "@/components/context/favorite.context";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useContext, useEffect, useState } from "react";
+import { useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -15,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "react-native-skeletons";
 
 export interface IBook {
@@ -75,14 +71,13 @@ const HomeScreen = () => {
       setLoading(false);
     }
   };
-  const [currentBook, setCurrentBook] = useState<IBook>();
 
   const { addBookToFavorites, removeBookFromFavorites, isBookInFavorites } =
     useFavoriteBooks();
 
-  return currentBook ? (
-    <BookDetails currentBook={currentBook} setCurrentBook={setCurrentBook} />
-  ) : (
+  const navigation = useNavigation();
+
+  return (
     <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.searchBar}
@@ -146,7 +141,14 @@ const HomeScreen = () => {
               />
               <View style={styles.cardContent}>
                 <View>
-                  <TouchableOpacity onPress={() => setCurrentBook(item)}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation
+                        .getParent()
+                        ?.navigate("book-details", { book: item });
+                    }}
+                    // onPress={() => setCurrentBook(item)}
+                  >
                     <Text style={styles.bookTitle}>{item.title}</Text>
                   </TouchableOpacity>
                   <Text style={styles.bookAuthor}>
